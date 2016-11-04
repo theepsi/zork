@@ -13,7 +13,7 @@ public:
 	Entity(EntityType type, const string name, const string description, Entity* parent);
 	virtual void Update();
 	virtual void Investigate();
-	virtual void AddEntity();
+	virtual void AddEntity(Entity* ent);
 
 	EntityType type;
 	const string name;

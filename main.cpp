@@ -41,11 +41,9 @@ int main() {
 			break;
 		}
 		else if (escape_room.Interaction(input) == false) {
-			cout << "I dont know how to tho that...\n";
+			cout << "I dont know how to do that...\n";
 		}
 	}
-
-	cout << "\n Good bye! Thanks for playing! \n";
 
 	return 0;
 }

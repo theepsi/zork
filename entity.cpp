@@ -12,6 +12,6 @@ void Entity::Investigate() {
 	
 }
 
-void Entity::AddEntity() {
+void Entity::AddEntity(Entity* ent) {
 
 }

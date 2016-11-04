@@ -8,6 +8,7 @@ public:
 	Room(const string name, const string description);
 	void Investigate();
 
+	void AddEntity(Entity* ent);
 };
 
 #endif

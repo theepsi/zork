@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="creature.cpp" />
     <ClCompile Include="entity.cpp" />
+    <ClCompile Include="item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="room.cpp" />
     <ClCompile Include="world.cpp" />
@@ -155,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="creature.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="item.h" />
     <ClInclude Include="room.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
