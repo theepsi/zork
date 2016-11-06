@@ -5,7 +5,8 @@
 
 class Room : public Entity {
 public:
-	Room(const string name, const string description);
+	Room(const string& name, const string& description);
+	~Room();
 	void Investigate();
 
 	void AddEntity(Entity* ent);
