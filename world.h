@@ -13,6 +13,7 @@ class Creature;
 class World {
 public:
 	World();
+	~World();
 	bool Interaction(const string& input);
 
 	list<Room*> rooms;

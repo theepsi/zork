@@ -52,6 +52,10 @@ World::World() {
 
 }
 
+World::~World() {
+
+}
+
 bool World::Interaction(const string& input) {
 
 	bool response = true;

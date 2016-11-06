@@ -1,8 +1,12 @@
 #include <iostream>
 #include "room.h"
 
-Room::Room(const string name, const string description) :
+Room::Room(const string& name, const string& description) :
 	Entity(EntityType::ROOM, name, description, NULL) {}
+
+Room::~Room() {
+
+}
 
 void Room::Investigate() {
 	cout << name << " - ";
