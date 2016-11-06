@@ -11,6 +11,9 @@ public:
 	~Creature();
 	void Investigate();
 	virtual bool Move(const string& direction);
+	bool OpenDoor(const string& direction);
+	bool UseItem(const string& item);
+
 	Room* location;
 };
 

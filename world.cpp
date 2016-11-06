@@ -35,6 +35,7 @@ World::World() {
 	rooms.push_back(living_room);
 
 
+	//TODO: Create Keys to open doors.
 	//EXITS
 
 	Exit* living_to_bathroom = new Exit("A wooden door.", "", living_room, bath_room, true, true, NULL);
@@ -47,21 +48,19 @@ World::World() {
 	living_room->AddExit(living_to_bigroom, "south");
 	living_room->AddExit(living_to_kitchen, "east");
 
-	Exit* bathroom_to_livingroom = new Exit("To Living room", "", bath_room, living_room, true, false, NULL);
+	Exit* bathroom_to_livingroom = new Exit("To Living room", "", bath_room, living_room, false, false, NULL);
 	Exit* kitchen_to_livingroom = new Exit("To Living room", "", kitchen, living_room, false, false, NULL);
-	Exit* bigroom_to_livingroom = new Exit("To Living room", "", big_room, living_room, true, false, NULL);
+	Exit* bigroom_to_livingroom = new Exit("To Living room", "", big_room, living_room, false, false, NULL);
 
 	bath_room->AddExit(bathroom_to_livingroom, "east");
 	kitchen->AddExit(kitchen_to_livingroom, "west");
 	big_room->AddExit(bigroom_to_livingroom, "north");
 
-	Exit* kitchen_to_storage = new Exit("To Storage room", "", kitchen, storage_room, true, true, NULL);
+	Exit* kitchen_to_storage = new Exit("It seams to be a entrance to a storage", "", kitchen, storage_room, true, true, NULL);
 	Exit* storage_to_kitchen = new Exit("To Kitchen room", "", storage_room, kitchen, true, false, NULL);
 
 	kitchen->AddExit(kitchen_to_storage, "east");
 	storage_room->AddExit(storage_to_kitchen, "west");
-
-	//TODO: Create Keys to open doors.
 	
 
 	//PLAYER
@@ -92,20 +91,36 @@ bool World::Interaction(const string& input) {
 			if (player->Move(tokens[0])) {
 				player->Investigate();
 			}
-			else {
-				cout << "There is no way in that direction.";
+		}
+		else if (tokens[0] == "open") {
+			cout << "What should I open?";
+		}
+		else {
+			response = false;
+		}
+	}
+	else if (tokens.size() == 2) {
+
+		if (tokens[0] == "open") {
+			if (tokens[1] == "door") {
+				cout << "Which door should I open?";
 			}
 		}
 		else {
 			response = false;
 		}
 	}
-	else {
-		if (tokens.size() == 3) {
-
+	else if (tokens.size() == 3) {
+		if (tokens[0] == "open") {
+			if (tokens[1] == "north" || tokens[1] == "east" || tokens[1] == "west" || tokens[1] == "south") {
+				if (tokens[2] == "door") {
+					if (player->OpenDoor(tokens[1])) {
+						cout << "Door is open now.";
+					}
+				}
+			}
 		}
 	}
-
 	return response;
 }
 
