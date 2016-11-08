@@ -13,6 +13,9 @@ public:
 	virtual bool Move(const string& direction);
 	bool OpenDoor(const string& direction);
 	bool UseItem(const string& item);
+	void ShowInventory();
+	void PickUpItem(const string& item);
+	void DropItem(const string& item);
 
 	Room* location;
 };

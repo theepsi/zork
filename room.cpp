@@ -16,10 +16,10 @@ void Room::Investigate() {
 	cout << "Here you can find: \n";
 	if (!contains.empty()) {
 		for (list<Entity*>::iterator it = contains.begin(); it != contains.cend(); ++it) {
-				Entity* ent = *it;
-				cout << "\t" << ent->name << ": ";
-				cout << ent->description << "\n";
-			}
+			Entity* ent = *it;
+			cout << "\t" << ent->name << ": ";
+			cout << ent->description << "\n";
+		}
 	}
 	else {
 		cout << "\t Nothing to see here.\n";

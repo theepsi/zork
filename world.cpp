@@ -24,7 +24,6 @@ World::World() {
 	Room* win_room = new Room("Win!", "You win the game, you scaped the room!");
 
 	//ITEMS
-
 	Item* book = new Item("Book", "Description of the game.");
 	Item* letter = new Item("Letter", "Welcome to the game letter.");
 
@@ -87,13 +86,16 @@ bool World::Interaction(const string& input) {
 		else if (tokens[0] == "hi") {
 			cout << "There is nobody here, you are alone... \n";
 		}
+		else if (tokens[0] == "pockets") {
+			player->ShowInventory();
+		}
 		else if (tokens[0] == "north" || tokens[0] == "east" || tokens[0] == "west" || tokens[0] == "south") {
 			if (player->Move(tokens[0])) {
 				player->Investigate();
 			}
 		}
 		else if (tokens[0] == "open") {
-			cout << "What should I open?";
+			cout << "What should I open?\n";
 		}
 		else {
 			response = false;
@@ -103,7 +105,7 @@ bool World::Interaction(const string& input) {
 
 		if (tokens[0] == "open") {
 			if (tokens[1] == "door") {
-				cout << "Which door should I open?";
+				cout << "Which door should I open?\n";
 			}
 		}
 		else {
@@ -115,7 +117,7 @@ bool World::Interaction(const string& input) {
 			if (tokens[1] == "north" || tokens[1] == "east" || tokens[1] == "west" || tokens[1] == "south") {
 				if (tokens[2] == "door") {
 					if (player->OpenDoor(tokens[1])) {
-						cout << "Door is open now.";
+						cout << "Door is open now.\n";
 					}
 				}
 			}

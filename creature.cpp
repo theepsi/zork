@@ -27,7 +27,7 @@ bool Creature::Move(const string& direction) {
 		return true;
 	}
 	else {
-		cout << "There is no way in that direction.";	
+		cout << "There is no way in that direction.\n";	
 		return false;
 	}
 }
@@ -40,12 +40,35 @@ bool Creature::OpenDoor(const string& direction) {
 		return true;
 	}
 	else {
-		cout << "I cannot do that";
+		cout << "I cannot do that\n";
 		return false;
 	}
 }
 
 bool Creature::UseItem(const string& item) {
 	return true;
+}
+
+void Creature::ShowInventory() {
+
+	if (!contains.empty()) {
+		cout << "Pockets: ";
+		for (list<Entity*>::iterator it = contains.begin(); it != contains.cend(); ++it) {
+			Entity* ent = *it;
+			cout << "\t" << ent->name << ": ";
+			cout << ent->description << "\n";
+		}
+	}
+	else {
+		cout << "You had nothing in your pockets.\n";
+	}
+}
+
+void Creature::PickUpItem(const string& item) {
+
+}
+
+void Creature::DropItem(const string& item) {
+
 }
 
