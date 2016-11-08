@@ -17,7 +17,7 @@ void Entity::Investigate() {
 }
 
 void Entity::AddEntity(Entity* ent) {
-
+	contains.push_back(ent);
 }
 
 Entity* Entity::GetEntityByName(const string& item_name) {

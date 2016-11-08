@@ -26,17 +26,12 @@ void Room::Investigate() {
 		cout << "\tNothing to see here.\n";
 	}
 	
-
 	if (!exits.empty()) {
 		cout << "You can see different directions from here:\n";
 		for (map<string, Exit*>::const_iterator it = exits.begin(); it != exits.end(); ++it) {
 			cout << "\t" << it->first << ": \t" << it->second->name << "\n";
 		}
 	}
-}
-
-void Room::AddEntity(Entity* ent) {
-	contains.push_back(ent);
 }
 
 void Room::AddExit(Exit* exit, const string& placement) {

@@ -11,7 +11,6 @@ public:
 	Room(const string& name, const string& description);
 	~Room();
 	void Investigate();
-	void AddEntity(Entity* ent);
 	Exit* GetExit(const string& direction);
 	void AddExit(Exit* exit, const string& placement);
 
