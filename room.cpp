@@ -1,6 +1,7 @@
 #include <iostream>
 #include "room.h"
 #include "exit.h"
+#include "item.h"
 
 Room::Room(const string& name, const string& description) :
 	Entity(EntityType::ROOM, name, description) {}
@@ -22,14 +23,14 @@ void Room::Investigate() {
 		}
 	}
 	else {
-		cout << "\t Nothing to see here.\n";
+		cout << "\tNothing to see here.\n";
 	}
 	
 
 	if (!exits.empty()) {
 		cout << "You can see different directions from here:\n";
 		for (map<string, Exit*>::const_iterator it = exits.begin(); it != exits.end(); ++it) {
-			cout << "\t" << it->first << ":\t" << it->second->name << "\n";
+			cout << "\t" << it->first << ": \t" << it->second->name << "\n";
 		}
 	}
 }

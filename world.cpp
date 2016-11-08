@@ -24,8 +24,8 @@ World::World() {
 	Room* win_room = new Room("Win!", "You win the game, you scaped the room!");
 
 	//ITEMS
-	Item* book = new Item("Book", "Description of the game.");
-	Item* letter = new Item("Letter", "Welcome to the game letter.");
+	Item* book = new Item("book", "Description of the game.");
+	Item* letter = new Item("letter", "Welcome to the game letter.");
 
 	living_room->AddEntity(book);
 	living_room->AddEntity(letter);
@@ -108,11 +108,23 @@ bool World::Interaction(const string& input) {
 				cout << "Which door should I open?\n";
 			}
 		}
+		else if (tokens[0] == "drop") {
+			if (tokens[1] != "") {
+				player->DropItem(tokens[1]);
+			}
+		}
 		else {
 			response = false;
 		}
 	}
 	else if (tokens.size() == 3) {
+		if (tokens[0] == "pick") {
+			if (tokens[1] == "up") {
+				if (tokens[2] != "") {
+					player->PickUpItem(tokens[2]);
+				}
+			}
+		}
 		if (tokens[0] == "open") {
 			if (tokens[1] == "north" || tokens[1] == "east" || tokens[1] == "west" || tokens[1] == "south") {
 				if (tokens[2] == "door") {
