@@ -14,8 +14,8 @@ public:
 	bool OpenDoor(const string& direction);
 	bool UseItem(const string& item);
 	void ShowInventory();
-	void PickUpItem(const string& item);
-	void DropItem(const string& item);
+	void PickUpItem(const string& item_name);
+	void DropItem(const string& item_name);
 
 	Room* location;
 };
