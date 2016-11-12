@@ -52,7 +52,7 @@ bool Creature::UseItem(const string& item) {
 void Creature::ShowInventory() {
 
 	if (!contains.empty()) {
-		cout << "Pockets: ";
+		cout << "Pockets: \n";
 		for (list<Entity*>::iterator it = contains.begin(); it != contains.cend(); ++it) {
 			Entity* ent = *it;
 			cout << "\t" << ent->name << ": ";
@@ -64,11 +64,29 @@ void Creature::ShowInventory() {
 	}
 }
 
-void Creature::PickUpItem(const string& item) {
+void Creature::PickUpItem(const string& item_name) {
+	Entity* item = location->GetEntityByName(item_name);
+	if (item != NULL) {
+		location->contains.remove(item);
+		contains.push_back(item);
 
+		cout << "You pick up a " << item->name << "\n";
+	}
+	else {
+		cout << "There is no item like that here. \n";
+	}
 }
 
-void Creature::DropItem(const string& item) {
+void Creature::DropItem(const string& item_name) {
+	Entity* item = GetEntityByName(item_name);
+	if (item != NULL) {
+		contains.remove(item);
+		location->contains.push_back(item);
 
+		cout << "You drop " << item->name << "\n";
+	}
+	else {
+		cout << "There is no item like that in your pockets. \n";
+	}
 }
 

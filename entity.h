@@ -15,7 +15,9 @@ public:
 
 	virtual void Update();
 	virtual void Investigate();
-	virtual void AddEntity(Entity* ent);
+	
+	void AddEntity(Entity* ent);
+	Entity* GetEntityByName(const string& item_name);
 
 	EntityType type;
 	const string name;
