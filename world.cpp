@@ -44,6 +44,28 @@ World::World() {
 	Item* cushion_green = new Item("cushion_green", "A green cushion.", "", false);
 	Item* cushion_blue = new Item("cushion_blue", "A blue cushion.", "", false);
 
+	Item* trigger = new Item("trigger", "It is like a piece of a lighter.", "It seams like it needs more pieces to work.", true);
+
+	Item* cabinet = new Item("cabinet", "A little cabinet with a mirror.", "", false);
+	Item* container = new Item("container", "It is a small container filled up with flamnable fluid.", "", true);
+
+	Item* result_lighter = new Item("lighter", "It is usefull to start a flame.", "Maybe you can use it on a kitchen.", true);
+
+	Item* cookers = new Item("cookers", "You can burn or melt things with this, but you need a flame first.", "You need a lighter to start cooking.", true);
+
+	Item* fridge = new Item("fridge", "An old fridge.", "", false);
+	Item* freezer = new Item("freezer", "A freezer inside the fridge.", "", false);
+
+	fridge->AddEntity(freezer);
+
+	Item* ice_cube = new Item("ice_cube", "A very solid and strong ice cube with something inside", "", true);
+
+	freezer->AddEntity(ice_cube);
+
+	cabinet->AddEntity(container);
+
+	cushion_red->AddEntity(trigger);
+
 	//COMBINATIONS
 
 	list<Item*> cardbord_to;
@@ -58,6 +80,19 @@ World::World() {
 	result_dictionary_list.push_back(cardboard);
 	result_dictionary_list.push_back(perforated_envelope);
 	combinables.insert(pair<Item*, list<Item*>>(result_dictionary, result_dictionary_list));
+
+	list<Item*> trigger_to;
+	trigger_to.push_back(result_lighter);
+	combine_to.insert(pair<string, list<Item*>>(trigger->name, trigger_to));
+
+	list<Item*> container_to;
+	container_to.push_back(result_lighter);
+	combine_to.insert(pair<string, list<Item*>>(container->name, container_to));
+
+	list<Item*> result_lighter_list;
+	result_lighter_list.push_back(trigger);
+	result_lighter_list.push_back(container);
+	combinables.insert(pair<Item*, list<Item*>>(result_lighter, result_lighter_list));
 
 	//END COMBINATIONS
 
@@ -79,6 +114,11 @@ World::World() {
 	big_room->AddEntity(blackboard);
 	big_room->AddEntity(desktop);
 	big_room->AddEntity(mattress);
+
+	bath_room->AddEntity(cabinet);
+
+	kitchen->AddEntity(cookers);
+	kitchen->AddEntity(fridge);
 
 	// Add rooms to the game.
 	rooms.push_back(living_room);
@@ -127,6 +167,7 @@ World::World() {
 
 	/*player->AddEntity(perforated_envelope);
 	player->AddEntity(cardboard);*/
+	/*player->AddEntity(result_lighter);*/
 
 }
 
@@ -230,7 +271,23 @@ bool World::Interaction(const string& input) {
 		}
 	}
 	else if (tokens.size() == 2) {
-		if (tokens[0] == "read" | tokens[0] == "use") {
+		if (tokens[0] == "use") {
+			if (tokens[1] == "cookers") {
+				if (!cookers_working) {
+					if (player->GetEntityByName("lighter") != NULL) {
+						cout << "The cookers are working now.\n";
+						cookers_working = true;
+					}
+					else {
+						cout << "You can not start fire from nothing. Be sure you have something that starts a flame.\n";
+					}
+				}
+				else {
+					cout << "Cookers are already working.\n";
+				}
+			}
+		}
+		else if (tokens[0] == "read" | tokens[0] == "use") {
 			if (tokens[1] != "") {
 				Entity* ent = player->location->GetEntityByName(tokens[1]);
 				if (ent != NULL) {
@@ -245,7 +302,7 @@ bool World::Interaction(const string& input) {
 			}
 		}
 		else if (tokens[0] == "investigate") {
-			if (tokens[1] != "") {
+			if (tokens[1] != "" && tokens[1] != "security_box") {
 				Entity* ent = player->location->GetEntityByName(tokens[1]);
 				if (ent != NULL) {
 					ent->Investigate();
@@ -256,6 +313,7 @@ bool World::Interaction(const string& input) {
 							player->location->AddEntity(ent);
 						}						
 					}
+					ent->DeleteContains();
 				}
 				else {
 					cout << "You can not investigate that.\n";
@@ -299,7 +357,7 @@ bool World::Interaction(const string& input) {
 		else if (tokens[0] == "lift" && tokens[1] == "the" && tokens[2] == "mattress") {
 			if (player->location->name == "Big Room" && !wckey_dropped) {
 				player->location->AddEntity(wckey_instance);
-				cout << "You lift the mattress and a key has follen to the floor.\n";
+				cout << "You lift the mattress and a key has fallen to the floor.\n";
 				wckey_dropped = true;
 			}
 		}
@@ -327,6 +385,7 @@ bool World::Interaction(const string& input) {
 								player->location->AddEntity(ent);
 							}						
 						}
+						vault->DeleteContains();
 					}
 				}
 				else

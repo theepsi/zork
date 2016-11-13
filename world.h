@@ -22,6 +22,7 @@ public:
 
 	Item* wckey_instance;
 	bool wckey_dropped = false;
+	bool cookers_working = false;
 
 	map<Item*, list<Item*>> combinables;
 	map<string, list<Item*>> combine_to;
