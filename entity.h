@@ -18,6 +18,7 @@ public:
 	
 	void AddEntity(Entity* ent);
 	Entity* GetEntityByName(const string& item_name);
+	void DeleteEntityByName(const string& item_name);
 
 	EntityType type;
 	const string name;

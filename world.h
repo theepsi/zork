@@ -9,6 +9,7 @@ using namespace std;
 
 class Entity;
 class Creature;
+class Item;
 
 class World {
 public:
@@ -18,6 +19,12 @@ public:
 
 	list<Room*> rooms;
 	Creature* player;
+
+	Item* wckey_instance;
+	bool wckey_dropped = false;
+
+	map<Item*, list<Item*>> combinables;
+	map<string, list<Item*>> combine_to;
 
 };
 

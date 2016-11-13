@@ -42,3 +42,15 @@ Entity* Entity::GetEntityByName(const string& item_name) {
 		return NULL;
 	}
 }
+
+void Entity::DeleteEntityByName(const string& item_name) {
+	if (!contains.empty()) {
+		for (list<Entity*>::iterator it = contains.begin(); it != contains.cend(); ++it) {
+			Entity* ent = *it;
+			if (ent->name == item_name) {
+				contains.remove(ent);
+				break;
+			}
+		}
+	}
+}
