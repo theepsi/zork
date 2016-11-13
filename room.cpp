@@ -13,21 +13,18 @@ Room::~Room() {
 void Room::Investigate() {
 	cout << name << " - ";
 	cout << description << "\n";
-
-	cout << "Here you can find: \n";
+	
 	if (!contains.empty()) {
+		cout << "\nHere you can find: \n";
 		for (list<Entity*>::iterator it = contains.begin(); it != contains.cend(); ++it) {
 			Entity* ent = *it;
 			cout << "\t" << ent->name << ": ";
 			cout << ent->description << "\n";
 		}
 	}
-	else {
-		cout << "\tNothing to see here.\n";
-	}
 	
 	if (!exits.empty()) {
-		cout << "You can see different directions from here:\n";
+		cout << "\nYou can see different directions from here:\n";
 		for (map<string, Exit*>::const_iterator it = exits.begin(); it != exits.end(); ++it) {
 			cout << "\t" << it->first << ": \t" << it->second->name << "\n";
 		}
