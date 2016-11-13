@@ -1,6 +1,7 @@
 #include <iostream>
 #include "creature.h"
 #include "room.h"
+#include "item.h"
 #include "exit.h"
 
 Creature::Creature(const string& name, const string& description, Room* location) :
@@ -32,12 +33,23 @@ bool Creature::Move(const string& direction) {
 	}
 }
 
-bool Creature::OpenDoor(const string& direction) {
+bool Creature::OpenDoor(const string& direction, const string& key_name) {
 	if (location->exits.find(direction) != location->exits.end()) {
-		//TODO take care fo keys
+
+		Entity* key = GetEntityByName(key_name);
+		if (key == NULL) {
+			cout << "You do not have that key in your pockets.\n";
+		}
+
 		Exit* exit = location->exits[direction];
-		exit->closed = false;
-		return true;
+		if (exit->locked) {
+			if (exit->key == (Item*)key) {
+				exit->locked = false;
+				exit->closed = false;
+				return true;
+			}
+		}
+		return false;
 	}
 	else {
 		cout << "I cannot do that\n";
@@ -67,10 +79,16 @@ void Creature::ShowInventory() {
 void Creature::PickUpItem(const string& item_name) {
 	Entity* item = location->GetEntityByName(item_name);
 	if (item != NULL) {
-		location->contains.remove(item);
-		contains.push_back(item);
+		if (((Item*)item)->pickable) {
+			location->contains.remove(item);
+			contains.push_back(item);
 
-		cout << "You pick up a " << item->name << "\n";
+			cout << "You pick up a " << item->name << "\n";
+		}
+		else {
+			cout << "You can not pick up that item.\n";
+		}
+		
 	}
 	else {
 		cout << "There is no item like that here. \n";

@@ -9,6 +9,7 @@
 #include "world.h"
 #include "item.h"
 #include "exit.h"
+#include "vault.h"
 
 World::World() {
 	//GAME Entities...
@@ -24,22 +25,38 @@ World::World() {
 	Room* win_room = new Room("Win!", "You win the game, you scaped the room!");
 
 	//ITEMS
-	Item* book = new Item("book", "Description of the game.");
-	Item* letter = new Item("letter", "Welcome to the game letter.");
+	Item* book = new Item("book", "Description of the game.", false);
+	Item* letter = new Item("letter", "Welcome to the game letter.", true);
+	Item* clock = new Item("clock", "The clock is broken, it marks 02:27 p.m.", false);
+	Item* picture = new Item("picture", "A bad imitation of the Van Gogh picture \"Bedroom in Arles\", the bedding is green...", false);
+	Vault* security_box = new Vault("security_box", "It is a small security box. Above the keyboard it says \"24 hours\".", "1427");
+	Item* bookcase = new Item("bookcase", "There are a lot of books but there is one that stands out above the others.", false);
+	Item* false_book = new Item("false_book", "This book is fake, it seems to have something inside.", false);
+	Item* cardboard = new Item("cardboard", "A piece of cardboard that contains some random letters in random positions...", true);
+
+	Item* blackboard = new Item("blackboard", "A blackboard on the wall that says: BXPW WOK ZDWWGKJJ", false);
+
+	picture->AddEntity(security_box);
 
 	living_room->AddEntity(book);
 	living_room->AddEntity(letter);
+	living_room->AddEntity(clock);
+	living_room->AddEntity(picture);
 
 	// Add rooms to the game.
 	rooms.push_back(living_room);
 
 
 	//TODO: Create Keys to open doors.
+	Item* bedroom_key = new Item("bkey", "The key of the bedroom.", true);
+
+	security_box->AddEntity(bedroom_key);
+
 	//EXITS
 
 	Exit* living_to_bathroom = new Exit("A wooden door.", "", living_room, bath_room, true, true, NULL);
 	Exit* living_to_win = new Exit("A very heavy door.", "", living_room, win_room, true, true, NULL);
-	Exit* living_to_bigroom = new Exit("A normal door.", "", living_room, big_room, true, false, NULL);
+	Exit* living_to_bigroom = new Exit("A normal door.", "", living_room, big_room, true, true, bedroom_key);
 	Exit* living_to_kitchen = new Exit("It seams like a kitchen.", "", living_room, kitchen, false, false, NULL);
 
 	living_room->AddExit(living_to_bathroom, "west");
@@ -103,9 +120,39 @@ bool World::Interaction(const string& input) {
 	}
 	else if (tokens.size() == 2) {
 
-		if (tokens[0] == "open") {
+		if (tokens[0] == "investigate") {
+			if (tokens[1] != "") {
+				Entity* ent = player->location->GetEntityByName(tokens[1]);
+				if (ent != NULL) {
+					ent->Investigate();
+					for (list<Entity*>::iterator it = ent->contains.begin(); it != ent->contains.cend(); ++it) {
+						Entity* ent = *it;
+						Entity* check = player->location->GetEntityByName(ent->name);
+						if (check == NULL) {
+							player->location->AddEntity(ent);
+						}						
+					}
+				}
+				else {
+					cout << "You can not investigate that.\n";
+				}
+			}
+		}
+		else if (tokens[0] == "open") {
 			if (tokens[1] == "door") {
 				cout << "Which door should I open?\n";
+			}
+			else if (tokens[1] == "security_box") {
+				Entity* ent = player->location->GetEntityByName(tokens[1]);
+				if (ent != NULL)
+					if (((Vault*)ent)->closed) {
+						cout << "You forget to say the secret PIN.\n";
+					}
+					else {
+						ent->Investigate();
+					}
+				else
+					cout << "I can not see that thing.\n";
 			}
 		}
 		else if (tokens[0] == "drop") {
@@ -128,8 +175,45 @@ bool World::Interaction(const string& input) {
 		if (tokens[0] == "open") {
 			if (tokens[1] == "north" || tokens[1] == "east" || tokens[1] == "west" || tokens[1] == "south") {
 				if (tokens[2] == "door") {
-					if (player->OpenDoor(tokens[1])) {
-						cout << "Door is open now.\n";
+					if ( ((Exit*)player->location->exits[tokens[1]])->locked) {
+						cout << "Door is locked by key\n";
+					}
+					else {
+						cout << "The door is already open.\n";
+					}
+				}
+			}
+			else if (tokens[1] == "security_box") {
+
+				Entity* ent = player->location->GetEntityByName(tokens[1]);
+				if (ent != NULL) {
+					Vault* vault = (Vault*)ent;
+					if (vault->OpenVault(tokens[2])) {
+						for (list<Entity*>::iterator it = ent->contains.begin(); it != ent->contains.cend(); ++it) {
+							Entity* ent = *it;
+							Entity* check = player->location->GetEntityByName(ent->name);
+							if (check == NULL) {
+								player->location->AddEntity(ent);
+							}						
+						}
+					}
+				}
+				else
+					cout << "I can not see that thing.\n";
+				
+			}
+		}
+	}
+	else if (tokens.size() == 5) {
+		if (tokens[0] == "open") {
+			if (tokens[1] == "north" || tokens[1] == "east" || tokens[1] == "west" || tokens[1] == "south") {
+				if (tokens[2] == "door") {
+					if (tokens[3] == "with") {
+						if (tokens[4] != "") {
+							if (player->OpenDoor(tokens[1], tokens[4])) {
+								cout << "You open the door.\n";
+							}
+						}
 					}
 				}
 			}

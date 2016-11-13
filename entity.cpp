@@ -13,7 +13,15 @@ void Entity::Update() {
 }
 
 void Entity::Investigate() {
-	
+	cout << name << ":\t" << description << "\n";
+	if (!contains.empty()) {
+		cout << "\nHere you can find: \n";
+		for (list<Entity*>::iterator it = contains.begin(); it != contains.cend(); ++it) {
+			Entity* ent = *it;
+			cout << "\t" << ent->name << ":\t";
+			cout << ent->description << "\n";
+		}
+	}
 }
 
 void Entity::AddEntity(Entity* ent) {
