@@ -10,6 +10,7 @@
 #include "item.h"
 #include "exit.h"
 #include "vault.h"
+#include "vat.h"
 
 World::World() {
 	//GAME Entities...
@@ -29,9 +30,13 @@ World::World() {
 	//TODO: Create Keys to open doors.
 	Item* bedroom_key = new Item("bkey", "The key of the bedroom.", "You can use this key with the south door of the living room.", true);
 	Item* bathroom_key = new Item("wckey", "The key of the bathroom.", "You can use this key with the west door of the living room.", true);
+	Item* storage_key = new Item("stkey", "The key of the store room.", "You can use this key with the east door of the kitchen room.", true);
+	Item* win_key = new Item("wkey", "This key leads you to the exit.", "You can use this key with the north door of the living room.", true);
 
 	//Save instances (circumstance-appear keys)
 	wckey_instance = bathroom_key;
+	stkey_instance = storage_key;
+	winkey_instance = win_key;
 
 	//END KEYS
 
@@ -59,7 +64,7 @@ World::World() {
 	living_room->AddEntity(bookcase);
 
 	//Big room items
-	Item* blackboard = new Item("blackboard", "A blackboard on the wall.", "BXPW WOK ZDWWGKJJ", false);
+	Item* blackboard = new Item("blackboard", "A blackboard on the wall. Read it to more details.", "BXPW WOK ZDWWGKJJ", false);
 	Item* desktop = new Item("desktop", "A very clean and organized desktop.", "", false);
 	Item* perforated_envelope = new Item("perforated_envelope", "A perforated envelope that contains some random letters in random positions...", "A    D      ->  \nP              O\nX -> I    B     \nM <-           G\n  ->      T <-  ", true);
 	Item* mattress = new Item("mattress", "A comfortable mattress.", "There is no time to take a nap...", false);
@@ -90,7 +95,7 @@ World::World() {
 	Item* cookers = new Item("cookers", "You can burn or melt things with this, but you need a flame first.", "You need a lighter to start cooking.", true);
 	Item* fridge = new Item("fridge", "An old fridge.", "", false);
 	Item* freezer = new Item("freezer", "A freezer inside the fridge.", "", false);
-	Item* ice_cube = new Item("ice_cube", "A very solid and strong ice cube with something inside", "", true);
+	Item* ice_cube = new Item("ice_cube", "A very solid and strong ice cube with something inside.", "", true);
 
 	freezer->AddEntity(ice_cube);
 	fridge->AddEntity(freezer);
@@ -98,6 +103,21 @@ World::World() {
 	kitchen->AddEntity(cookers);
 	kitchen->AddEntity(fridge);
 
+	//Storage room items
+	Item* letter_game = new Item("instructions", "Instructions for the water puzzle.", "You must fill with 8 liters of water both 16 and 9 liter vats, once you accomplish that, the key to the victory will be revealed to you.", false);
+	Vat* water_vat_16 = new Vat("A-vat: 16L", "A vat with 16 liters of capacity.", 16, 16);
+	Vat* water_vat_9 = new Vat("B-vat: 9L", "A vat with 9 liters of capacity.", 9, 0);
+	Vat* water_vat_7 = new Vat("C-vat: 7L", "A vat with 7 liters of capacity.", 7, 0);
+
+	vat_game["A"] = water_vat_16;
+	vat_game["B"] = water_vat_9;
+	vat_game["C"] = water_vat_7;
+
+	storage_room->AddEntity(letter_game);
+	storage_room->AddEntity(water_vat_16);
+	storage_room->AddEntity(water_vat_9);
+	storage_room->AddEntity(water_vat_7);
+	
 	//END ITEMS
 
 	//COMBINATIONS
@@ -140,7 +160,7 @@ World::World() {
 	//EXITS
 
 	Exit* living_to_bathroom = new Exit("A wooden door.", "", living_room, bathroom, true, true, bathroom_key);
-	Exit* living_to_win = new Exit("A very heavy door.", "", living_room, win_room, true, true, NULL);
+	Exit* living_to_win = new Exit("A very heavy door.", "", living_room, win_room, true, true, win_key);
 	Exit* living_to_bigroom = new Exit("A normal door.", "", living_room, big_room, true, true, bedroom_key);
 	Exit* living_to_kitchen = new Exit("It seems like a kitchen.", "", living_room, kitchen, false, false, NULL);
 
@@ -157,8 +177,8 @@ World::World() {
 	kitchen->AddExit(kitchen_to_livingroom, "west");
 	big_room->AddExit(bigroom_to_livingroom, "north");
 
-	Exit* kitchen_to_storage = new Exit("It seems to be a entrance to a storage room.", "", kitchen, storage_room, true, true, NULL);
-	Exit* storage_to_kitchen = new Exit("To the kitchen.", "", storage_room, kitchen, true, false, NULL);
+	Exit* kitchen_to_storage = new Exit("It seems to be a entrance to a storage room.", "", kitchen, storage_room, true, true, storage_key);
+	Exit* storage_to_kitchen = new Exit("To the kitchen.", "", storage_room, kitchen, false, false, NULL);
 
 	kitchen->AddExit(kitchen_to_storage, "east");
 	storage_room->AddExit(storage_to_kitchen, "west");
@@ -175,6 +195,7 @@ World::World() {
 	/*player->AddEntity(perforated_envelope);
 	player->AddEntity(cardboard);*/
 	/*player->AddEntity(result_lighter);*/
+	//player->AddEntity(stkey_instance);
 
 }
 
@@ -278,11 +299,11 @@ bool World::Interaction(const string& input) {
 		}
 	}
 	else if (tokens.size() == 2) {
-		if (tokens[0] == "use") {
-			if (tokens[1] == "cookers") {
+		if (tokens[0] == "use" && tokens[1] == "cookers") {
+			if (player->location->name == "Kitchen") {
 				if (!cookers_working) {
 					if (player->GetEntityByName("lighter") != NULL) {
-						cout << "The cookers are working now.\n";
+						cout << "The cookers are working now. You can boil an item.\n";
 						cookers_working = true;
 					}
 					else {
@@ -290,9 +311,28 @@ bool World::Interaction(const string& input) {
 					}
 				}
 				else {
-					cout << "Cookers are already working.\n";
+					cout << "Cookers are already working. You can boil an item.\n";
 				}
 			}
+			else {
+				response = false;
+			}
+		}
+		else if (tokens[0] == "boil" && tokens[1] == "ice_cube") {
+			Entity* check = player->GetEntityByName("ice_cube");
+			if (check != NULL) {
+				if (cookers_working) {
+					cout << "The ice is melted, a key has been revealed in the water.\n";
+					player->location->AddEntity(stkey_instance);
+				}
+				else {
+					cout << "Cookers are not working.\n";
+				}
+			}
+			else {
+				cout << "You dont have that item in your pockets.\n";
+			}
+			
 		}
 		else if (tokens[0] == "read" | tokens[0] == "use") {
 			if (tokens[1] != "") {
@@ -360,6 +400,27 @@ bool World::Interaction(const string& input) {
 					player->PickUpItem(tokens[2]);
 				}
 			}
+		}
+		else if (tokens[0] == "move" && !water_puzzle_complete) {
+			Vat* source;
+			Vat* dest;
+			if (tokens[1] != tokens[2]) {
+				
+				source = vat_game[tokens[1]];
+				dest = vat_game[tokens[2]];
+
+				source->MoveWater(dest);
+				cout << "A: " << vat_game["A"]->filled << "L/16L\n";
+				cout << "B: " << vat_game["B"]->filled << "L/9L\n";
+				cout << "C: " << vat_game["C"]->filled << "L/7L\n";
+
+				if (vat_game["A"]->filled == 8 && vat_game["B"]->filled == 8) {
+					cout << "You completed the puzzle. A key appears on the wall.\n";
+					player->location->AddEntity(winkey_instance);
+					water_puzzle_complete = true;
+				}
+			}
+			
 		}
 		else if (tokens[0] == "lift" && tokens[1] == "the" && tokens[2] == "mattress") {
 			if (player->location->name == "Big Room" && !wckey_dropped) {
