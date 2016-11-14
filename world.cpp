@@ -192,10 +192,6 @@ World::World() {
 	player = new Creature("Player", "The person who is trapped inside the house.", living_room);
 
 	//TEST
-	/*player->AddEntity(perforated_envelope);
-	player->AddEntity(cardboard);*/
-	/*player->AddEntity(result_lighter);*/
-	//player->AddEntity(stkey_instance);
 
 }
 
