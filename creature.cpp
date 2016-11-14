@@ -52,7 +52,7 @@ bool Creature::OpenDoor(const string& direction, const string& key_name) {
 		return false;
 	}
 	else {
-		cout << "I cannot do that\n";
+		cout << "You can not do that.\n";
 		return false;
 	}
 }
@@ -64,15 +64,14 @@ bool Creature::UseItem(const string& item) {
 void Creature::ShowInventory() {
 
 	if (!contains.empty()) {
-		cout << "Pockets: \n";
 		for (list<Entity*>::iterator it = contains.begin(); it != contains.cend(); ++it) {
 			Entity* ent = *it;
-			cout << "\t" << ent->name << ": ";
+			cout << "\t" << ent->name << ":\t";
 			cout << ent->description << "\n";
 		}
 	}
 	else {
-		cout << "You had nothing in your pockets.\n";
+		cout << "You have nothing in your pockets.\n";
 	}
 }
 
@@ -83,7 +82,7 @@ void Creature::PickUpItem(const string& item_name) {
 			location->contains.remove(item);
 			contains.push_back(item);
 
-			cout << "You pick up a " << item->name << "\n";
+			cout << "You have picked up: " << item->name << ".\n";
 		}
 		else {
 			cout << "You can not pick up that item.\n";
@@ -91,7 +90,7 @@ void Creature::PickUpItem(const string& item_name) {
 		
 	}
 	else {
-		cout << "There is no item like that here. \n";
+		cout << "There is no item like that here.\n";
 	}
 }
 
@@ -101,10 +100,10 @@ void Creature::DropItem(const string& item_name) {
 		contains.remove(item);
 		location->contains.push_back(item);
 
-		cout << "You drop " << item->name << "\n";
+		cout << "You have dropped: " << item->name << ".\n";
 	}
 	else {
-		cout << "There is no item like that in your pockets. \n";
+		cout << "There is no item like that in your pockets.\n";
 	}
 }
 

@@ -15,10 +15,10 @@ void Room::Investigate() {
 	cout << description << "\n";
 	
 	if (!contains.empty()) {
-		cout << "\nHere you can find: \n";
+		cout << "\nHere you can find:\n";
 		for (list<Entity*>::iterator it = contains.begin(); it != contains.cend(); ++it) {
 			Entity* ent = *it;
-			cout << "\t" << ent->name << ": ";
+			cout << "\t" << ent->name << ":\t";
 			cout << ent->description << "\n";
 		}
 	}
@@ -26,7 +26,7 @@ void Room::Investigate() {
 	if (!exits.empty()) {
 		cout << "\nYou can see different directions from here:\n";
 		for (map<string, Exit*>::const_iterator it = exits.begin(); it != exits.end(); ++it) {
-			cout << "\t" << it->first << ": \t" << it->second->name << "\n";
+			cout << "\t" << it->first << ":\t" << it->second->name << "\n";
 		}
 	}
 }

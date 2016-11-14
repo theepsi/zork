@@ -17,13 +17,27 @@ World::World() {
 	//ROOMS
 
 	Room* living_room = new Room("Living Room", "The living room of the house.");
-	Room* bath_room = new Room("Bath Room", "This is the bath room.");
-	Room* storage_room = new Room("Storage Room", "Here you can see a lot of things.");
-	Room* kitchen = new Room("Kitchen", "An Old Kitchen with some dishes.");
 	Room* big_room = new Room("Big Room", "A very clean room, with a big bed.");
+	Room* bathroom = new Room("Bathroom", "This is the bath room.");
+	Room* kitchen = new Room("Kitchen", "An old kitchen with some dishes.");
+	Room* storage_room = new Room("Storage Room", "Here you can see a lot of things.");
 	Room* win_room = new Room("Win!", "You win the game, you scaped the room!");
 
+	//END ROOMS
+
+	//KEYS
+	//TODO: Create Keys to open doors.
+	Item* bedroom_key = new Item("bkey", "The key of the bedroom.", "You can use this key with the south door of the living room.", true);
+	Item* bathroom_key = new Item("wckey", "The key of the bathroom.", "You can use this key with the west door of the living room.", true);
+
+	//Save instances (circumstance-appear keys)
+	wckey_instance = bathroom_key;
+
+	//END KEYS
+
 	//ITEMS
+
+	//Living room items
 	Item* book = new Item("book", "Description of the game.", "TODO", false);
 	Item* letter = new Item("letter", "Welcome to the game letter.", "TODO", true);
 	Item* clock = new Item("clock", "The digital clock is stuck.", "It marks 02:27 p.m.", false);
@@ -32,41 +46,64 @@ World::World() {
 	Item* bookcase = new Item("bookcase", "There are a lot of books but there is one that stands out above the others.", "", false);
 	Item* fake_book = new Item("fake_book", "This book is fake, it seems to have something inside.", "", false);
 	Item* cardboard = new Item("cardboard", "A piece of cardboard that contains some random letters in random positions...", "* <- *    K ** E\n* -> F    H <- *\n* ** *    * -> L\n* ** Z    R <- *\nJ ** S    * ** W", true);
+	
+	security_box->AddEntity(bedroom_key);
+	picture->AddEntity(security_box);
+	fake_book->AddEntity(cardboard);
+	bookcase->AddEntity(fake_book);
 
+	living_room->AddEntity(book);
+	living_room->AddEntity(letter);
+	living_room->AddEntity(clock);
+	living_room->AddEntity(picture);
+	living_room->AddEntity(bookcase);
+
+	//Big room items
 	Item* blackboard = new Item("blackboard", "A blackboard on the wall.", "BXPW WOK ZDWWGKJJ", false);
 	Item* desktop = new Item("desktop", "A very clean and organized desktop.", "", false);
 	Item* perforated_envelope = new Item("perforated_envelope", "A perforated envelope that contains some random letters in random positions...", "A    D      ->  \nP              O\nX -> I    B     \nM <-           G\n  ->      T <-  ", true);
-
-	Item* result_dictionary = new Item("dictionary", "The result of combining the cardboard and the perforated envelope.", "A <- D    K -> E\nP -> F    H <- O\nX -> I    B -> L\nM <- Z    R <- G\nJ -> S    T <- W", true);
-
 	Item* mattress = new Item("mattress", "A comfortable mattress.", "There is no time to take a nap...", false);
 	Item* cushion_red = new Item("cushion_red", "A red cushion.", "TODO", false);
 	Item* cushion_green = new Item("cushion_green", "A green cushion.", "", false);
 	Item* cushion_blue = new Item("cushion_blue", "A blue cushion.", "", false);
+	Item* trigger = new Item("trigger", "It is like a piece of a lighter.", "It seems like it needs more pieces to work.", true);
 
-	Item* trigger = new Item("trigger", "It is like a piece of a lighter.", "It seams like it needs more pieces to work.", true);
+	desktop->AddEntity(perforated_envelope);
+	cushion_red->AddEntity(trigger);
+	mattress->AddEntity(cushion_red);
+	mattress->AddEntity(cushion_green);
+	mattress->AddEntity(cushion_blue);
 
+	big_room->AddEntity(blackboard);
+	big_room->AddEntity(desktop);
+	big_room->AddEntity(mattress);
+
+	//Bathroom items
 	Item* cabinet = new Item("cabinet", "A little cabinet with a mirror.", "", false);
 	Item* container = new Item("container", "It is a small container filled up with flamnable fluid.", "", true);
 
-	Item* result_lighter = new Item("lighter", "It is usefull to start a flame.", "Maybe you can use it on a kitchen.", true);
+	cabinet->AddEntity(container);
 
+	bathroom->AddEntity(cabinet);
+
+	//Kitchen items
 	Item* cookers = new Item("cookers", "You can burn or melt things with this, but you need a flame first.", "You need a lighter to start cooking.", true);
-
 	Item* fridge = new Item("fridge", "An old fridge.", "", false);
 	Item* freezer = new Item("freezer", "A freezer inside the fridge.", "", false);
-
-	fridge->AddEntity(freezer);
-
 	Item* ice_cube = new Item("ice_cube", "A very solid and strong ice cube with something inside", "", true);
 
 	freezer->AddEntity(ice_cube);
+	fridge->AddEntity(freezer);
 
-	cabinet->AddEntity(container);
+	kitchen->AddEntity(cookers);
+	kitchen->AddEntity(fridge);
 
-	cushion_red->AddEntity(trigger);
+	//END ITEMS
 
 	//COMBINATIONS
+
+	//Dictionary = cardboard + perforated_envelope
+	Item* result_dictionary = new Item("dictionary", "The result of combining the cardboard and the perforated envelope.", "A <- D    K -> E\nP -> F    H <- O\nX -> I    B -> L\nM <- Z    R <- G\nJ -> S    T <- W", true);
 
 	list<Item*> cardbord_to;
 	cardbord_to.push_back(result_dictionary);
@@ -80,6 +117,10 @@ World::World() {
 	result_dictionary_list.push_back(cardboard);
 	result_dictionary_list.push_back(perforated_envelope);
 	combinables.insert(pair<Item*, list<Item*>>(result_dictionary, result_dictionary_list));
+
+	//Lighter = trigger + container
+
+	Item* result_lighter = new Item("lighter", "It is usefull to start a flame.", "Maybe you can use it on a kitchen.", true);
 
 	list<Item*> trigger_to;
 	trigger_to.push_back(result_lighter);
@@ -96,75 +137,41 @@ World::World() {
 
 	//END COMBINATIONS
 
-	picture->AddEntity(security_box);
-	fake_book->AddEntity(cardboard);
-	bookcase->AddEntity(fake_book);
-
-	living_room->AddEntity(book);
-	living_room->AddEntity(letter);
-	living_room->AddEntity(clock);
-	living_room->AddEntity(picture);
-	living_room->AddEntity(bookcase);
-
-	desktop->AddEntity(perforated_envelope);
-	mattress->AddEntity(cushion_red);
-	mattress->AddEntity(cushion_green);
-	mattress->AddEntity(cushion_blue);
-
-	big_room->AddEntity(blackboard);
-	big_room->AddEntity(desktop);
-	big_room->AddEntity(mattress);
-
-	bath_room->AddEntity(cabinet);
-
-	kitchen->AddEntity(cookers);
-	kitchen->AddEntity(fridge);
-
-	// Add rooms to the game.
-	rooms.push_back(living_room);
-
-
-	//TODO: Create Keys to open doors.
-	Item* bedroom_key = new Item("bkey", "The key of the bedroom.", "You can use this key with the south door of the living room.", true);
-	Item* bathroom_key = new Item("wckey", "The key of the bathroom.", "You can use this key with the west door of the living room.", true);
-
-	//save instance of the new key
-	wckey_instance = bathroom_key;
-
-	security_box->AddEntity(bedroom_key);
-
 	//EXITS
 
-	Exit* living_to_bathroom = new Exit("A wooden door.", "", living_room, bath_room, true, true, bathroom_key);
+	Exit* living_to_bathroom = new Exit("A wooden door.", "", living_room, bathroom, true, true, bathroom_key);
 	Exit* living_to_win = new Exit("A very heavy door.", "", living_room, win_room, true, true, NULL);
 	Exit* living_to_bigroom = new Exit("A normal door.", "", living_room, big_room, true, true, bedroom_key);
-	Exit* living_to_kitchen = new Exit("It seams like a kitchen.", "", living_room, kitchen, false, false, NULL);
+	Exit* living_to_kitchen = new Exit("It seems like a kitchen.", "", living_room, kitchen, false, false, NULL);
 
 	living_room->AddExit(living_to_bathroom, "west");
 	living_room->AddExit(living_to_win, "north");
 	living_room->AddExit(living_to_bigroom, "south");
 	living_room->AddExit(living_to_kitchen, "east");
 
-	Exit* bathroom_to_livingroom = new Exit("To Living room", "", bath_room, living_room, false, false, NULL);
-	Exit* kitchen_to_livingroom = new Exit("To Living room", "", kitchen, living_room, false, false, NULL);
-	Exit* bigroom_to_livingroom = new Exit("To Living room", "", big_room, living_room, false, false, NULL);
+	Exit* bathroom_to_livingroom = new Exit("To the living room.", "", bathroom, living_room, false, false, NULL);
+	Exit* kitchen_to_livingroom = new Exit("To the living room.", "", kitchen, living_room, false, false, NULL);
+	Exit* bigroom_to_livingroom = new Exit("To the living room.", "", big_room, living_room, false, false, NULL);
 
-	bath_room->AddExit(bathroom_to_livingroom, "east");
+	bathroom->AddExit(bathroom_to_livingroom, "east");
 	kitchen->AddExit(kitchen_to_livingroom, "west");
 	big_room->AddExit(bigroom_to_livingroom, "north");
 
-	Exit* kitchen_to_storage = new Exit("It seams to be a entrance to a storage", "", kitchen, storage_room, true, true, NULL);
-	Exit* storage_to_kitchen = new Exit("To Kitchen room", "", storage_room, kitchen, true, false, NULL);
+	Exit* kitchen_to_storage = new Exit("It seems to be a entrance to a storage room.", "", kitchen, storage_room, true, true, NULL);
+	Exit* storage_to_kitchen = new Exit("To the kitchen.", "", storage_room, kitchen, true, false, NULL);
 
 	kitchen->AddExit(kitchen_to_storage, "east");
 	storage_room->AddExit(storage_to_kitchen, "west");
-	
+
+	//END EXITS
+
+	//GAME (add rooms)
+	rooms.push_back(living_room);
 
 	//PLAYER
 	player = new Creature("Player", "The person who is trapped inside the house.", living_room);
 
 	//TEST
-
 	/*player->AddEntity(perforated_envelope);
 	player->AddEntity(cardboard);*/
 	/*player->AddEntity(result_lighter);*/
