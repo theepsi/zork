@@ -5,7 +5,7 @@
 #include <iterator>
 #include <vector>
 #include "entity.h"
-#include "creature.h"
+#include "player.h"
 #include "world.h"
 #include "item.h"
 #include "exit.h"
@@ -18,16 +18,15 @@ World::World() {
 	//ROOMS
 
 	Room* living_room = new Room("Living Room", "The living room of the house.");
-	Room* big_room = new Room("Big Room", "A very clean room, with a big bed.");
+	Room* big_room = new Room("Bedroom", "A very clean room, with a big bed.");
 	Room* bathroom = new Room("Bathroom", "This is the bath room.");
 	Room* kitchen = new Room("Kitchen", "An old kitchen with some dishes.");
 	Room* storage_room = new Room("Storage Room", "Here you can see a lot of things.");
-	Room* win_room = new Room("Win!", "You win the game, you scaped the room!");
+	Room* win_room = new Room("Exit", "You win the game, you scaped the room!");
 
 	//END ROOMS
 
 	//KEYS
-	//TODO: Create Keys to open doors.
 	Item* bedroom_key = new Item("bkey", "The key of the bedroom.", "You can use this key with the south door of the living room.", true);
 	Item* bathroom_key = new Item("wckey", "The key of the bathroom.", "You can use this key with the west door of the living room.", true);
 	Item* storage_key = new Item("stkey", "The key of the store room.", "You can use this key with the east door of the kitchen room.", true);
@@ -68,7 +67,7 @@ World::World() {
 	Item* desktop = new Item("desktop", "A very clean and organized desktop.", "", false);
 	Item* perforated_envelope = new Item("perforated_envelope", "A perforated envelope that contains some random letters in random positions...", "A    D      ->  \nP              O\nX -> I    B     \nM <-           G\n  ->      T <-  ", true);
 	Item* mattress = new Item("mattress", "A comfortable mattress.", "There is no time to take a nap...", false);
-	Item* cushion_red = new Item("cushion_red", "A red cushion.", "TODO", false);
+	Item* cushion_red = new Item("cushion_red", "A red cushion.", "There is something inside this cushion...", false);
 	Item* cushion_green = new Item("cushion_green", "A green cushion.", "", false);
 	Item* cushion_blue = new Item("cushion_blue", "A blue cushion.", "", false);
 	Item* trigger = new Item("trigger", "It is like a piece of a lighter.", "It seems like it needs more pieces to work.", true);
@@ -92,7 +91,7 @@ World::World() {
 	bathroom->AddEntity(cabinet);
 
 	//Kitchen items
-	Item* cookers = new Item("cookers", "You can burn or melt things with this, but you need a flame first.", "You need a lighter to start cooking.", true);
+	Item* cookers = new Item("cookers", "You can burn or melt things with this, but you need a flame first.", "You need a lighter to turn on the cookers.", true);
 	Item* fridge = new Item("fridge", "An old fridge.", "", false);
 	Item* freezer = new Item("freezer", "A freezer inside the fridge.", "", false);
 	Item* ice_cube = new Item("ice_cube", "A very solid and strong ice cube with something inside.", "", true);
@@ -105,13 +104,13 @@ World::World() {
 
 	//Storage room items
 	Item* letter_game = new Item("instructions", "Instructions for the water puzzle.", "You must fill with 8 liters of water both 16 and 9 liter vats, once you accomplish that, the key to the victory will be revealed to you.", false);
-	Vat* water_vat_16 = new Vat("A-vat: 16L", "A vat with 16 liters of capacity.", 16, 16);
-	Vat* water_vat_9 = new Vat("B-vat: 9L", "A vat with 9 liters of capacity.", 9, 0);
-	Vat* water_vat_7 = new Vat("C-vat: 7L", "A vat with 7 liters of capacity.", 7, 0);
+	Vat* water_vat_16 = new Vat("a-vat: 16L", "A vat with 16 liters of capacity.", 16, 16);
+	Vat* water_vat_9 = new Vat("b-vat: 9L", "A vat with 9 liters of capacity.", 9, 0);
+	Vat* water_vat_7 = new Vat("c-vat: 7L", "A vat with 7 liters of capacity.", 7, 0);
 
-	vat_game["A"] = water_vat_16;
-	vat_game["B"] = water_vat_9;
-	vat_game["C"] = water_vat_7;
+	vat_game["a"] = water_vat_16;
+	vat_game["b"] = water_vat_9;
+	vat_game["c"] = water_vat_7;
 
 	storage_room->AddEntity(letter_game);
 	storage_room->AddEntity(water_vat_16);
@@ -189,293 +188,100 @@ World::World() {
 	rooms.push_back(living_room);
 
 	//PLAYER
-	player = new Creature("Player", "The person who is trapped inside the house.", living_room);
+	player = new Player("Player", "The person who is trapped inside the house.", living_room);
 
 	//TEST
+}
+
+World::~World() {
 
 }
 
 bool World::Interaction(const string& input) {
 
-	bool response = true;
-	
-	vector<string> tokens;
-	if (!input.empty()) {
-		istringstream iss(input);
-		copy(istream_iterator<string>(iss),
-			istream_iterator<string>(),
-			back_inserter(tokens));
-	}
+	if (!hasWin) {
+		bool response = true;
 
-	if (tokens[0] == "combine") {
-		bool items_on_pockets = false;
-		if (tokens.size() > 2) {
-			// Inventory checks
-			for (string token : tokens) {
-				if (token != "combine") {
-					Entity* ent = player->GetEntityByName(token);
-					if (ent != NULL) {
-						items_on_pockets = true;
-					}
-					else {
-						items_on_pockets = false;
-						break;
-					}
-				}
-			}
-			if (items_on_pockets) {
-				bool can_combine = false;
-				Item* result_item = NULL;
-				if (combine_to.find(tokens[1]) != combine_to.end()) {
-					for (Item* item : combine_to[tokens[1]]) {
-						if (combinables.find(item) != combinables.end()) {
-							result_item = item;
-							list<Item*> check_list = combinables[item];
-							if (check_list.size() == tokens.size() - 1) {
-								for (string token : tokens) {
-									if (token != "combine") {
-										Item* token_item = (Item*)player->GetEntityByName(token);
-										if (find(check_list.begin(), check_list.end(), token_item) != check_list.end()) {
-											can_combine = true;
-										}
-										else {
-											can_combine = false;
-											break;
-										}
-									}
-								}
-								if (can_combine) {
-									break;
-								}
-							}
-						}
-					}
-					if (can_combine) {
-						player->AddEntity(result_item);
-						for (string token : tokens) {
-							if (token != "combine") {
-								player->DeleteEntityByName(token);
-							}
-						}
-						cout << "Item was successfully combined: " << result_item->name << "\n";
-					}
-					else {
-						cout << "This objects are not combinables.\n";
-					}
-				}
-				else {
-					cout << "This objects are not combinables.\n";
-				}
-			}
-			else {
-				cout << "You do not have those items on your pockets.\n";
-			}
+		vector<string> tokens;
+		if (!input.empty()) {
+			istringstream iss(input);
+			copy(istream_iterator<string>(iss),
+				istream_iterator<string>(),
+				back_inserter(tokens));
 		}
-	}
-	else if (tokens.size() == 1) {
-		if (tokens[0] == "investigate") {
-			player->Investigate();
-		}
-		else if (tokens[0] == "hi") {
-			cout << "There is nobody here, you are alone... \n";
-		}
-		else if (tokens[0] == "pockets") {
-			player->ShowInventory();
-		}
-		else if (tokens[0] == "north" || tokens[0] == "east" || tokens[0] == "west" || tokens[0] == "south") {
-			if (player->Move(tokens[0])) {
-				player->Investigate();
-			}
+
+		if (tokens[0] == "combine") {
+			player->Combine(tokens, combinables, combine_to);
 		}
 		else if (tokens[0] == "open") {
-			cout << "What should I open?\n";
+			player->Open(tokens);
 		}
-		else {
-			response = false;
-		}
-	}
-	else if (tokens.size() == 2) {
-		if (tokens[0] == "use" && tokens[1] == "cookers") {
-			if (player->location->name == "Kitchen") {
-				if (!cookers_working) {
-					if (player->GetEntityByName("lighter") != NULL) {
-						cout << "The cookers are working now. You can boil an item.\n";
-						cookers_working = true;
+		else if (tokens.size() == 1) {
+			if (tokens[0] == "investigate" || tokens[0] == "look") {
+				player->Investigate();
+			}
+			else if (tokens[0] == "hi" || tokens[0] == "hello") {
+				cout << "There is nobody here, you are alone... \n";
+			}
+			else if (tokens[0] == "pockets") {
+				player->ShowInventory();
+			}
+			else if (tokens[0] == "north" || tokens[0] == "east" || tokens[0] == "west" || tokens[0] == "south") {
+				if (player->Move(tokens[0])) {
+					player->Investigate();
+					if (player->location->name == "Exit") {
+						hasWin = true;
+						cout << "\nYou can exit the game by typing \"quit\".\n";
+						cout << "Thanks for playing!\n";
 					}
-					else {
-						cout << "You can not start fire from nothing. Be sure you have something that starts a flame.\n";
-					}
-				}
-				else {
-					cout << "Cookers are already working. You can boil an item.\n";
 				}
 			}
 			else {
 				response = false;
 			}
 		}
-		else if (tokens[0] == "boil" && tokens[1] == "ice_cube") {
-			Entity* check = player->GetEntityByName("ice_cube");
-			if (check != NULL) {
-				if (cookers_working) {
-					cout << "The ice is melted, a key has been revealed in the water.\n";
-					player->location->AddEntity(stkey_instance);
-				}
-				else {
-					cout << "Cookers are not working.\n";
-				}
+		else if (tokens.size() == 2) {
+			if (tokens[0] == "use" || tokens[0] == "read") {
+				player->UseItem(tokens[1]);
+			}
+			else if (tokens[0] == "boil") {
+				player->BoilItem(tokens[1], cookers_working, stkey_instance);
+			}
+			else if (tokens[0] == "investigate" || tokens[0] == "look") {
+				player->InvestigateItem(tokens[1]);
+			}
+			else if (tokens[0] == "drop") {
+				player->DropItem(tokens[1]);
+			}
+			else if (tokens[0] == "take") {
+				player->PickUpItem(tokens[1]);
 			}
 			else {
-				cout << "You dont have that item in your pockets.\n";
-			}
-			
-		}
-		else if (tokens[0] == "read" | tokens[0] == "use") {
-			if (tokens[1] != "") {
-				Entity* ent = player->location->GetEntityByName(tokens[1]);
-				if (ent != NULL) {
-					((Item*)ent)->UseItem();
-				}
-				else {
-					Entity* ent = player->GetEntityByName(tokens[1]);
-					if (ent != NULL) {
-						((Item*)ent)->UseItem();
-					}
-				}
+				response = false;
 			}
 		}
-		else if (tokens[0] == "investigate") {
-			if (tokens[1] != "" && tokens[1] != "security_box") {
-				Entity* ent = player->location->GetEntityByName(tokens[1]);
-				if (ent != NULL) {
-					ent->Investigate();
-					for (list<Entity*>::iterator it = ent->contains.begin(); it != ent->contains.cend(); ++it) {
-						Entity* ent = *it;
-						Entity* check = player->location->GetEntityByName(ent->name);
-						if (check == NULL) {
-							player->location->AddEntity(ent);
-						}						
-					}
-					ent->DeleteContains();
-				}
-				else {
-					cout << "You can not investigate that.\n";
-				}
+		else if (tokens.size() == 3) {
+			if (tokens[0] == "lift" && tokens[1] == "the" && tokens[2] == "mattress") {
+				player->LiftTheMattress(wckey_dropped, wckey_instance);
 			}
-		}
-		else if (tokens[0] == "open") {
-			if (tokens[1] == "door") {
-				cout << "Which door should I open?\n";
+			else if (tokens[0] == "turn" && tokens[1] == "on" && tokens[2] == "cookers") {
+				player->TurnOnCookers(cookers_working);
 			}
-			else if (tokens[1] == "security_box") {
-				Entity* ent = player->location->GetEntityByName(tokens[1]);
-				if (ent != NULL)
-					if (((Vault*)ent)->closed) {
-						cout << "You forget to say the secret PIN.\n";
-					}
-					else {
-						ent->Investigate();
-					}
-				else
-					cout << "I can not see that thing.\n";
+			else if (tokens[0] == "move") {
+				player->PlayVatPuzzle(tokens, water_puzzle_complete, winkey_instance, vat_game);
 			}
-		}
-		else if (tokens[0] == "drop") {
-			if (tokens[1] != "") {
-				player->DropItem(tokens[1]);
+			else {
+				response = false;
 			}
 		}
 		else {
 			response = false;
 		}
+		return response;
 	}
-	else if (tokens.size() == 3) {
-		if (tokens[0] == "pick") {
-			if (tokens[1] == "up") {
-				if (tokens[2] != "") {
-					player->PickUpItem(tokens[2]);
-				}
-			}
-		}
-		else if (tokens[0] == "move" && !water_puzzle_complete) {
-			Vat* source;
-			Vat* dest;
-			if (tokens[1] != tokens[2]) {
-				
-				source = vat_game[tokens[1]];
-				dest = vat_game[tokens[2]];
-
-				source->MoveWater(dest);
-				cout << "A: " << vat_game["A"]->filled << "L/16L\n";
-				cout << "B: " << vat_game["B"]->filled << "L/9L\n";
-				cout << "C: " << vat_game["C"]->filled << "L/7L\n";
-
-				if (vat_game["A"]->filled == 8 && vat_game["B"]->filled == 8) {
-					cout << "You completed the puzzle. A key appears on the wall.\n";
-					player->location->AddEntity(winkey_instance);
-					water_puzzle_complete = true;
-				}
-			}
-			
-		}
-		else if (tokens[0] == "lift" && tokens[1] == "the" && tokens[2] == "mattress") {
-			if (player->location->name == "Big Room" && !wckey_dropped) {
-				player->location->AddEntity(wckey_instance);
-				cout << "You lift the mattress and a key has fallen to the floor.\n";
-				wckey_dropped = true;
-			}
-		}
-		else if (tokens[0] == "open") {
-			if (tokens[1] == "north" || tokens[1] == "east" || tokens[1] == "west" || tokens[1] == "south") {
-				if (tokens[2] == "door") {
-					if ( ((Exit*)player->location->exits[tokens[1]])->locked) {
-						cout << "Door is locked by key\n";
-					}
-					else {
-						cout << "The door is already open.\n";
-					}
-				}
-			}
-			else if (tokens[1] == "security_box") {
-
-				Entity* ent = player->location->GetEntityByName(tokens[1]);
-				if (ent != NULL) {
-					Vault* vault = (Vault*)ent;
-					if (vault->OpenVault(tokens[2])) {
-						for (list<Entity*>::iterator it = ent->contains.begin(); it != ent->contains.cend(); ++it) {
-							Entity* ent = *it;
-							Entity* check = player->location->GetEntityByName(ent->name);
-							if (check == NULL) {
-								player->location->AddEntity(ent);
-							}						
-						}
-						vault->DeleteContains();
-					}
-				}
-				else
-					cout << "I can not see that thing.\n";
-				
-			}
-		}
+	else {
+		cout << "You can exit the game by typing \"quit\".\n";
+		cout << "Thanks for playing!\n";
+		return true;
 	}
-	else if (tokens.size() == 5) {
-		if (tokens[0] == "open") {
-			if (tokens[1] == "north" || tokens[1] == "east" || tokens[1] == "west" || tokens[1] == "south") {
-				if (tokens[2] == "door") {
-					if (tokens[3] == "with") {
-						if (tokens[4] != "") {
-							if (player->OpenDoor(tokens[1], tokens[4])) {
-								cout << "You open the door.\n";
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	return response;
-}
-
-World::~World() {
-
 }

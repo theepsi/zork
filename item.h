@@ -7,7 +7,7 @@ class Item : public Entity {
 public:
 	Item(const string& name, const string& description, const string& action, bool pickable);
 	~Item();
-	void UseItem();
+	void Use();
 
 	bool pickable;
 	const string action;
