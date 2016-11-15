@@ -22,7 +22,7 @@ World::World() {
 	Room* bathroom = new Room("Bathroom", "This is the bath room.");
 	Room* kitchen = new Room("Kitchen", "An old kitchen with some dishes.");
 	Room* storage_room = new Room("Storage Room", "Here you can see a lot of things.");
-	Room* win_room = new Room("Exit", "You win the game, you scaped the room!");
+	Room* win_room = new Room("Exit", "You win the game, you escaped from the room!");
 
 	//END ROOMS
 
@@ -103,10 +103,10 @@ World::World() {
 	kitchen->AddEntity(fridge);
 
 	//Storage room items
-	Item* letter_game = new Item("instructions", "Instructions for the water puzzle.", "You must fill with 8 liters of water both 16 and 9 liter vats, once you accomplish that, the key to the victory will be revealed to you.", false);
-	Vat* water_vat_16 = new Vat("a-vat: 16L", "A vat with 16 liters of capacity.", 16, 16);
-	Vat* water_vat_9 = new Vat("b-vat: 9L", "A vat with 9 liters of capacity.", 9, 0);
-	Vat* water_vat_7 = new Vat("c-vat: 7L", "A vat with 7 liters of capacity.", 7, 0);
+	Item* letter_game = new Item("instructions", "Instructions for the water puzzle.", "You must fill with 8 liters of water both 16 and 9 liter vats, once you accomplish that, the key to the victory will be revealed to you. The 16L one is full of water and the other ones are empty.", false);
+	Vat* water_vat_16 = new Vat("a-vat 16L", "A vat with 16 liters of capacity.", 16, 16);
+	Vat* water_vat_9 = new Vat("b-vat 9L", "A vat with 9 liters of capacity.", 9, 0);
+	Vat* water_vat_7 = new Vat("c-vat 7L", "A vat with 7 liters of capacity.", 7, 0);
 
 	vat_game["a"] = water_vat_16;
 	vat_game["b"] = water_vat_9;
