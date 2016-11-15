@@ -19,6 +19,7 @@ public:
 	void ShowInventory();
 	void PickUpItem(const string& item_name);
 	void DropItem(const string& item_name);
+	void DropItem(const string& item_name, const string& destination);
 	void Open(vector<string> tokens);
 
 	void Combine(vector<string> tokens, map<Item*, list<Item*>> combinables, map<string, list<Item*>> combine_to);
@@ -26,6 +27,7 @@ public:
 	void LiftTheMattress(bool &wckey_dropped, Item* wckey_instance);
 	void TurnOnCookers(bool &cookers_working);
 	void PlayVatPuzzle(vector<string> tokens, bool &water_puzzle_complete, Item* winkey_instance, map<string, Vat*> vat_game);
+	void ShowVats(map<string, Vat*> vat_game);
 };
 
 #endif

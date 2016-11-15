@@ -27,10 +27,10 @@ World::World() {
 	//END ROOMS
 
 	//KEYS
-	Item* bedroom_key = new Item("bkey", "The key of the bedroom.", "You can use this key with the south door of the living room.", true);
-	Item* bathroom_key = new Item("wckey", "The key of the bathroom.", "You can use this key with the west door of the living room.", true);
-	Item* storage_key = new Item("stkey", "The key of the store room.", "You can use this key with the east door of the kitchen room.", true);
-	Item* win_key = new Item("wkey", "This key leads you to the exit.", "You can use this key with the north door of the living room.", true);
+	Item* bedroom_key = new Item("bkey", "The key of the bedroom.", "You can use this key with the south door of the living room.", true, false);
+	Item* bathroom_key = new Item("wckey", "The key of the bathroom.", "You can use this key with the west door of the living room.", true, false);
+	Item* storage_key = new Item("stkey", "The key of the store room.", "You can use this key with the east door of the kitchen room.", true, false);
+	Item* win_key = new Item("wkey", "This key leads you to the exit.", "You can use this key with the north door of the living room.", true, false);
 
 	//Save instances (circumstance-appear keys)
 	wckey_instance = bathroom_key;
@@ -42,14 +42,14 @@ World::World() {
 	//ITEMS
 
 	//Living room items
-	Item* book = new Item("book", "Description of the game.", "TODO", false);
-	Item* letter = new Item("letter", "Welcome to the game letter.", "TODO", true);
-	Item* clock = new Item("clock", "The digital clock is stuck.", "It marks 02:27 p.m.", false);
-	Item* picture = new Item("picture", "A bad imitation of the Van Gogh picture \"Bedroom in Arles\", the bedding is green...", "In the original picture the bedding is red.", false);
+	Item* book = new Item("book", "Description of the game.", "TODO", true, false);
+	Item* letter = new Item("letter", "Welcome to the game letter.", "TODO", true, false);
+	Item* clock = new Item("clock", "The digital clock is stuck.", "It marks 02:27 p.m.", false, false);
+	Item* picture = new Item("picture", "A bad imitation of the Van Gogh picture \"Bedroom in Arles\", the bedding is green...", "In the original picture the bedding is red.", false, false);
 	Vault* security_box = new Vault("security_box", "It is a small security box. Above the keyboard it says \"24 hours\".", "1427");
-	Item* bookcase = new Item("bookcase", "There are a lot of books but there is one that stands out above the others.", "", false);
-	Item* fake_book = new Item("fake_book", "This book is fake, it seems to have something inside.", "", false);
-	Item* cardboard = new Item("cardboard", "A piece of cardboard that contains some random letters in random positions...", "* <- *    K ** E\n* -> F    H <- *\n* ** *    * -> L\n* ** Z    R <- *\nJ ** S    * ** W", true);
+	Item* bookcase = new Item("bookcase", "There are a lot of books but there is one that stands out above the others.", "", false, true);
+	Item* fake_book = new Item("fake_book", "This book is fake, it seems to have something inside.", "", false, false);
+	Item* cardboard = new Item("cardboard", "A piece of cardboard that contains some random letters in random positions...", "* <- *    K ** E\n* -> F    H <- *\n* ** *    * -> L\n* ** Z    R <- *\nJ ** S    * ** W", true, false);
 	
 	security_box->AddEntity(bedroom_key);
 	picture->AddEntity(security_box);
@@ -63,14 +63,14 @@ World::World() {
 	living_room->AddEntity(bookcase);
 
 	//Big room items
-	Item* blackboard = new Item("blackboard", "A blackboard on the wall. Read it to more details.", "BXPW WOK ZDWWGKJJ", false);
-	Item* desktop = new Item("desktop", "A very clean and organized desktop.", "", false);
-	Item* perforated_envelope = new Item("perforated_envelope", "A perforated envelope that contains some random letters in random positions...", "A    D      ->  \nP              O\nX -> I    B     \nM <-           G\n  ->      T <-  ", true);
-	Item* mattress = new Item("mattress", "A comfortable mattress.", "There is no time to take a nap...", false);
-	Item* cushion_red = new Item("cushion_red", "A red cushion.", "There is something inside this cushion...", false);
-	Item* cushion_green = new Item("cushion_green", "A green cushion.", "", false);
-	Item* cushion_blue = new Item("cushion_blue", "A blue cushion.", "", false);
-	Item* trigger = new Item("trigger", "It is like a piece of a lighter.", "It seems like it needs more pieces to work.", true);
+	Item* blackboard = new Item("blackboard", "A blackboard on the wall. Read it to more details.", "BXPW WOK ZDWWGKJJ", false, false);
+	Item* desktop = new Item("desktop", "A very clean and organized desktop.", "", false, true);
+	Item* perforated_envelope = new Item("perforated_envelope", "A perforated envelope that contains some random letters in random positions...", "A    D      ->  \nP              O\nX -> I    B     \nM <-           G\n  ->      T <-  ", true, false);
+	Item* mattress = new Item("mattress", "A comfortable mattress.", "There is no time to take a nap...", false, true);
+	Item* cushion_red = new Item("cushion_red", "A red cushion.", "There is something inside this cushion...", false, true);
+	Item* cushion_green = new Item("cushion_green", "A green cushion.", "", false, true);
+	Item* cushion_blue = new Item("cushion_blue", "A blue cushion.", "", false, true);
+	Item* trigger = new Item("trigger", "It is like a piece of a lighter.", "It seems like it needs more pieces to work.", true, false);
 
 	desktop->AddEntity(perforated_envelope);
 	cushion_red->AddEntity(trigger);
@@ -83,18 +83,18 @@ World::World() {
 	big_room->AddEntity(mattress);
 
 	//Bathroom items
-	Item* cabinet = new Item("cabinet", "A little cabinet with a mirror.", "", false);
-	Item* container = new Item("container", "It is a small container filled up with flamnable fluid.", "", true);
+	Item* cabinet = new Item("cabinet", "A little cabinet with a mirror.", "", false, true);
+	Item* container = new Item("container", "It is a small container filled up with flamnable fluid.", "", true, false);
 
 	cabinet->AddEntity(container);
 
 	bathroom->AddEntity(cabinet);
 
 	//Kitchen items
-	Item* cookers = new Item("cookers", "You can burn or melt things with this, but you need a flame first.", "You need a lighter to turn on the cookers.", true);
-	Item* fridge = new Item("fridge", "An old fridge.", "", false);
-	Item* freezer = new Item("freezer", "A freezer inside the fridge.", "", false);
-	Item* ice_cube = new Item("ice_cube", "A very solid and strong ice cube with something inside.", "", true);
+	Item* cookers = new Item("cookers", "You can burn or melt things with this, but you need a flame first.", "You need a lighter to turn on the cookers.", true, false);
+	Item* fridge = new Item("fridge", "An old fridge.", "", false, true);
+	Item* freezer = new Item("freezer", "A freezer inside the fridge.", "", false, true);
+	Item* ice_cube = new Item("ice_cube", "A very solid and strong ice cube with something inside.", "", true, false);
 
 	freezer->AddEntity(ice_cube);
 	fridge->AddEntity(freezer);
@@ -103,7 +103,7 @@ World::World() {
 	kitchen->AddEntity(fridge);
 
 	//Storage room items
-	Item* letter_game = new Item("instructions", "Instructions for the water puzzle.", "You must fill with 8 liters of water both 16 and 9 liter vats, once you accomplish that, the key to the victory will be revealed to you. The 16L one is full of water and the other ones are empty.", false);
+	Item* letter_game = new Item("instructions", "Instructions for the water puzzle.", "You must fill with 8 liters of water both 16 and 9 liter vats, once you accomplish that, the key to the victory will be revealed to you. The 16L one is full of water and the other ones are empty.", false, false);
 	Vat* water_vat_16 = new Vat("a-vat 16L", "A vat with 16 liters of capacity.", 16, 16);
 	Vat* water_vat_9 = new Vat("b-vat 9L", "A vat with 9 liters of capacity.", 9, 0);
 	Vat* water_vat_7 = new Vat("c-vat 7L", "A vat with 7 liters of capacity.", 7, 0);
@@ -122,7 +122,7 @@ World::World() {
 	//COMBINATIONS
 
 	//Dictionary = cardboard + perforated_envelope
-	Item* result_dictionary = new Item("dictionary", "The result of combining the cardboard and the perforated envelope.", "A <- D    K -> E\nP -> F    H <- O\nX -> I    B -> L\nM <- Z    R <- G\nJ -> S    T <- W", true);
+	Item* result_dictionary = new Item("dictionary", "The result of combining the cardboard and the perforated envelope.", "A <- D    K -> E\nP -> F    H <- O\nX -> I    B -> L\nM <- Z    R <- G\nJ -> S    T <- W", true, false);
 
 	list<Item*> cardbord_to;
 	cardbord_to.push_back(result_dictionary);
@@ -139,7 +139,7 @@ World::World() {
 
 	//Lighter = trigger + container
 
-	Item* result_lighter = new Item("lighter", "It is usefull to start a flame.", "Maybe you can use it on a kitchen.", true);
+	Item* result_lighter = new Item("lighter", "It is usefull to start a flame.", "Maybe you can use it on a kitchen.", true, false);
 
 	list<Item*> trigger_to;
 	trigger_to.push_back(result_lighter);
@@ -244,6 +244,9 @@ bool World::Interaction(const string& input) {
 			if (tokens[0] == "use" || tokens[0] == "read") {
 				player->UseItem(tokens[1]);
 			}
+			else if (tokens[0] == "show" && tokens[1] == "vats") {
+				player->ShowVats(vat_game);
+			}
 			else if (tokens[0] == "boil") {
 				player->BoilItem(tokens[1], cookers_working, stkey_instance);
 			}
@@ -269,6 +272,9 @@ bool World::Interaction(const string& input) {
 			}
 			else if (tokens[0] == "move") {
 				player->PlayVatPuzzle(tokens, water_puzzle_complete, winkey_instance, vat_game);
+			}
+			else if (tokens[0] == "drop") {
+				player->DropItem(tokens[1], tokens[2]);
 			}
 			else {
 				response = false;

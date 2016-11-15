@@ -175,6 +175,30 @@ void Player::DropItem(const string& item_name) {
 	}
 }
 
+void Player::DropItem(const string& item_name, const string& destination) {
+	Entity* item = GetEntityByName(item_name);
+	Entity* dest = location->GetEntityByName(destination);
+	if (item != NULL) {
+		if (dest != NULL) {
+			if (((Item*)dest)->canContains) {
+				contains.remove(item);
+				dest->contains.push_back(item);
+
+				cout << "You have dropped: " << item->name << " on " << dest->name << ".\n";
+			}
+			else {
+				cout << "You can not drop that item on that destination.\n";
+			}
+		}
+		else {
+			cout << "You can not drop that item on that destination.\n";
+		}
+	}
+	else {
+		cout << "There is no item like that in your pockets.\n";
+	}
+}
+
 void Player::Open(vector<string> tokens) {
 	if (tokens.size() == 1) {
 		cout << "To open what?\n";
@@ -376,36 +400,50 @@ void Player::TurnOnCookers(bool &cookers_working) {
 }
 
 void Player::PlayVatPuzzle(vector<string> tokens, bool &water_puzzle_complete, Item* winkey_instance, map<string, Vat*> vat_game) {
-	if (!water_puzzle_complete) {
-		Vat* source;
-		Vat* dest;
-		if (tokens[1] != tokens[2]) {
-			source = vat_game[tokens[1]];
-			dest = vat_game[tokens[2]];
+	if (location->name == "Storage Room") {
+		if (!water_puzzle_complete) {
+			Vat* source;
+			Vat* dest;
+			if (tokens[1] != tokens[2]) {
+				source = vat_game[tokens[1]];
+				dest = vat_game[tokens[2]];
 
-			if (source->filled != 0) {
-				source->MoveWater(dest);
-				cout << "a: " << vat_game["a"]->filled << "L/16L\n";
-				cout << "b: " << vat_game["b"]->filled << "L/9L\n";
-				cout << "c: " << vat_game["c"]->filled << "L/7L\n";
-
-				if (vat_game["a"]->filled == 8 && vat_game["b"]->filled == 8) {
-					cout << "You have completed the puzzle. A key appears on the wall.\n";
-					location->AddEntity(winkey_instance);
-					water_puzzle_complete = true;
+				if (source->filled != 0) {
+					source->MoveWater(dest);
+					ShowVats(vat_game);
+					if (vat_game["a"]->filled == 8 && vat_game["b"]->filled == 8) {
+						cout << "You have completed the puzzle. A key appears on the wall.\n";
+						location->AddEntity(winkey_instance);
+						water_puzzle_complete = true;
+					}
 				}
+				else {
+					cout << "Source vat is empty.\n";
+				}
+
 			}
 			else {
-				cout << "Source vat is empty.\n";
+				cout << "You can not move water from the same source to the same destination.\n";
 			}
-			
-		} 
+		}
 		else {
-			cout << "You can not move water from the same source to the same destination.\n";
+			cout << "You already solved this puzzle.\n";
 		}
 	}
 	else {
-		cout << "You already solved this puzzle.\n";
+		cout << "You can not do that here.\n";
+	}
+
+	
+}
+void Player::ShowVats(map<string, Vat*> vat_game) {
+	if (location->name == "Storage Room") {
+		cout << "a: " << vat_game["a"]->filled << "L/16L\n";
+		cout << "b: " << vat_game["b"]->filled << "L/9L\n";
+		cout << "c: " << vat_game["c"]->filled << "L/7L\n";
+	}
+	else {
+		cout << "You can not do that here.\n";
 	}
 }
 

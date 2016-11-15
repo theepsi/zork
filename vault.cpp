@@ -2,7 +2,7 @@
 #include "vault.h"
 
 Vault::Vault(const string& name, const string& description, const string& code) :
-	Item(name, description, "", false),
+	Item(name, description, "", false, true),
 	code(code), closed(true) {}
 
 Vault::~Vault() {

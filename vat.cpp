@@ -2,7 +2,7 @@
 #include "vat.h"
 
 Vat::Vat(const string& name, const string& description, int capacity, int filled) :
-	Item(name, description, "", false),
+	Item(name, description, "", false, false),
 	filled(filled), capacity(capacity) {}
 
 Vat::~Vat() {
