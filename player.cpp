@@ -144,22 +144,27 @@ void Player::ShowInventory() {
 }
 
 void Player::PickUpItem(const string& item_name) {
-	Entity* item = location->GetEntityByName(item_name);
-	if (item != NULL) {
-		if (((Item*)item)->pickable) {
-			location->contains.remove(item);
-			contains.push_back(item);
+	if (contains.size() < 3) {
+		Entity* item = location->GetEntityByName(item_name);
+		if (item != NULL) {
+			if (((Item*)item)->pickable) {
+				location->contains.remove(item);
+				contains.push_back(item);
 
-			cout << "You have taken: " << item->name << ".\n";
+				cout << "You have taken: " << item->name << ".\n";
+			}
+			else {
+				cout << "You can not take that item.\n";
+			}
+
 		}
 		else {
-			cout << "You can not take that item.\n";
+			cout << "There is no item like this here.\n";
 		}
-
 	}
 	else {
-		cout << "There is no item like this here.\n";
-	}
+		cout << "You do not have enough space in your pockets. Drop an item to be able to take something you want.\n";
+	}	
 }
 
 void Player::DropItem(const string& item_name) {

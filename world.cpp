@@ -83,14 +83,14 @@ World::World() {
 
 	//Bathroom items
 	Item* cabinet = new Item("cabinet", "A little cabinet with a mirror.", "", false, true);
-	Item* container = new Item("container", "It is a small container filled up with flamnable fluid.", "", true, false);
+	Item* container = new Item("container", "It is a small container filled up with flamable fluid.", "", true, false);
 
 	cabinet->AddEntity(container);
 
 	bathroom->AddEntity(cabinet);
 
 	//Kitchen items
-	Item* cookers = new Item("cookers", "You can burn or melt things with this, but you need a flame first.", "You need a lighter to 'turn on cookers'.", true, false);
+	Item* cookers = new Item("cookers", "You can boil things with this, but you need a flame first.", "You need a lighter to 'turn on cookers'.", true, false);
 	Item* fridge = new Item("fridge", "An old fridge.", "", false, true);
 	Item* freezer = new Item("freezer", "A freezer inside the fridge.", "", false, true);
 	Item* ice_cube = new Item("ice_cube", "A very solid and strong ice cube with something inside.", "It wont melt that easy...", true, false);
