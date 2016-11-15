@@ -29,16 +29,17 @@ void Entity::AddEntity(Entity* ent) {
 }
 
 Entity* Entity::GetEntityByName(const string& item_name) {
-	if (!contains.empty()) {
-		for (list<Entity*>::iterator it = contains.begin(); it != contains.cend(); ++it) {
-			Entity* ent = *it;
-			if (ent->name == item_name) {
-				return ent;
-			}
+	for (list<Entity*>::iterator it = contains.begin(); it != contains.cend(); ++it) {
+		if ((*it)->name == item_name) {
+			return *it;
 		}
-		return NULL;
 	}
-	else {
-		return NULL;
+	return NULL;
+}
+
+void Entity::DeleteEntityByName(const string& item_name) {
+	Entity* ent = GetEntityByName(item_name);
+	if (ent != NULL) {
+		contains.remove(ent);
 	}
 }

@@ -5,12 +5,13 @@
 
 class Item : public Entity {
 public:
-	Item(const string& name, const string& description, bool pickable);
+	Item(const string& name, const string& description, const string& action, bool pickable, bool canContains);
 	~Item();
-	void UseItem();
-	void OpenVault(const string& code);
+	void Use();
 
 	bool pickable;
+	bool canContains;
+	const string action;
 };
 
 #endif

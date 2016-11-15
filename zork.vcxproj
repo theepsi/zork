@@ -151,7 +151,9 @@
     <ClCompile Include="exit.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="room.cpp" />
+    <ClCompile Include="vat.cpp" />
     <ClCompile Include="vault.cpp" />
     <ClCompile Include="world.cpp" />
   </ItemGroup>
@@ -160,7 +162,9 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="exit.h" />
     <ClInclude Include="item.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="room.h" />
+    <ClInclude Include="vat.h" />
     <ClInclude Include="vault.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
