@@ -60,11 +60,13 @@ int main() {
 				cout << "\t- pockets -> this command open player's inventory.\n";
 				cout << "\t- take [item_name] -> player takes an item from the room.\n";
 				cout << "\t- drop [item_name] -> player drops an item to the room.\n";
+				cout << "\t- drop [item_name] [item_name_destination] -> player drops an item into another item.\n";
 				cout << "\t- combine [list_of_items] -> player can combine some items from its inventory by passing them throught the list. A successful combination will delete those items and create the new combinated one.\n";
 				cout << "\t- open [north | east | west | south] door -> player can open unlocked doors with this command.\n";
 				cout << "\t- open [north | east | west | south] door with [item_name] -> player can open locked doors with this command if it has the key in its inventory.\n";
 				cout << "\t- open [vault_name] -> player can open unlocked vaults.\n";
 				cout << "\t- open [vault_name] [pin] -> player can open vaults with a PIN. The elements from vault's content will be accesible from the room after executing this command (they will become visible).\n";
+				cout << "\t- show vats -> this command will show the current state of vats.\n";
 			}
 			else if (!escape_room.Interaction(input)) {
 				cout << "No idea how to do that...\n";

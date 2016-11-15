@@ -211,6 +211,14 @@ void Player::Open(vector<string> tokens) {
 					Vault* vault = (Vault*)ent;
 					if (!vault->closed) {
 						vault->Investigate();
+						for (list<Entity*>::iterator it = vault->contains.begin(); it != vault->contains.cend(); ++it) {
+							Entity* ent = *it;
+							Entity* check = location->GetEntityByName(ent->name);
+							if (check == NULL) {
+								location->AddEntity(ent);
+							}
+						}
+						vault->DeleteContains();
 					}
 					else {
 						cout << "You forgot to enter the PIN.\n";

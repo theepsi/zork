@@ -42,9 +42,8 @@ World::World() {
 	//ITEMS
 
 	//Living room items
-	Item* book = new Item("book", "Description of the game.", "TODO", true, false);
-	Item* letter = new Item("letter", "Welcome to the game letter.", "TODO", true, false);
-	Item* clock = new Item("clock", "The digital clock is stuck.", "It marks 02:27 p.m.", false, false);
+	Item* letter = new Item("letter", "Welcome to the game letter.", "Welcome stranger, maybe you are asking yourself what are you doing here, so... You have come with the purpose of beating my challenge. Do you want to exit? It's easy, the exit door is just at north from where you are now. But it will not be that simple. Hope you do not lose your mind in my game, it is like a piece of 'art' for me.", true, false);
+	Item* clock = new Item("clock", "The digital clock is stuck, it has a fixed time blinking. You can read it to have more information.", "It marks 02:27 p.m.", false, false);
 	Item* picture = new Item("picture", "A bad imitation of the Van Gogh picture \"Bedroom in Arles\", the bedding is green...", "In the original picture the bedding is red.", false, false);
 	Vault* security_box = new Vault("security_box", "It is a small security box. Above the keyboard it says \"24 hours\".", "1427");
 	Item* bookcase = new Item("bookcase", "There are a lot of books but there is one that stands out above the others.", "", false, true);
@@ -56,7 +55,7 @@ World::World() {
 	fake_book->AddEntity(cardboard);
 	bookcase->AddEntity(fake_book);
 
-	living_room->AddEntity(book);
+	//living_room->AddEntity(book);
 	living_room->AddEntity(letter);
 	living_room->AddEntity(clock);
 	living_room->AddEntity(picture);
@@ -65,7 +64,7 @@ World::World() {
 	//Big room items
 	Item* blackboard = new Item("blackboard", "A blackboard on the wall. Read it to more details.", "BXPW WOK ZDWWGKJJ", false, false);
 	Item* desktop = new Item("desktop", "A very clean and organized desktop.", "", false, true);
-	Item* perforated_envelope = new Item("perforated_envelope", "A perforated envelope that contains some random letters in random positions...", "A    D      ->  \nP              O\nX -> I    B     \nM <-           G\n  ->      T <-  ", true, false);
+	Item* perforated_envelope = new Item("perforated_envelope", "A perforated envelope that contains some random letters in random positions... Maybe you can 'combine' it with something.", "A    D      ->  \nP              O\nX -> I    B     \nM <-           G\n  ->      T <-  ", true, false);
 	Item* mattress = new Item("mattress", "A comfortable mattress.", "There is no time to take a nap...", false, true);
 	Item* cushion_red = new Item("cushion_red", "A red cushion.", "There is something inside this cushion...", false, true);
 	Item* cushion_green = new Item("cushion_green", "A green cushion.", "", false, true);
@@ -91,10 +90,10 @@ World::World() {
 	bathroom->AddEntity(cabinet);
 
 	//Kitchen items
-	Item* cookers = new Item("cookers", "You can burn or melt things with this, but you need a flame first.", "You need a lighter to turn on the cookers.", true, false);
+	Item* cookers = new Item("cookers", "You can burn or melt things with this, but you need a flame first.", "You need a lighter to 'turn on cookers'.", true, false);
 	Item* fridge = new Item("fridge", "An old fridge.", "", false, true);
 	Item* freezer = new Item("freezer", "A freezer inside the fridge.", "", false, true);
-	Item* ice_cube = new Item("ice_cube", "A very solid and strong ice cube with something inside.", "", true, false);
+	Item* ice_cube = new Item("ice_cube", "A very solid and strong ice cube with something inside.", "It wont melt that easy...", true, false);
 
 	freezer->AddEntity(ice_cube);
 	fridge->AddEntity(freezer);
@@ -103,7 +102,7 @@ World::World() {
 	kitchen->AddEntity(fridge);
 
 	//Storage room items
-	Item* letter_game = new Item("instructions", "Instructions for the water puzzle.", "You must fill with 8 liters of water both 16 and 9 liter vats, once you accomplish that, the key to the victory will be revealed to you. The 16L one is full of water and the other ones are empty.", false, false);
+	Item* letter_game = new Item("instructions", "Instructions for the water puzzle.", "You must fill with 8 liters of water both 16 and 9 liter vats, once you accomplish that, the key to the victory will be revealed to you. The 16L one is full of water and the other ones are empty. Move the water by 'move' and wich ones you want to move 'a, b or c.", false, false);
 	Vat* water_vat_16 = new Vat("a-vat 16L", "A vat with 16 liters of capacity.", 16, 16);
 	Vat* water_vat_9 = new Vat("b-vat 9L", "A vat with 9 liters of capacity.", 9, 0);
 	Vat* water_vat_7 = new Vat("c-vat 7L", "A vat with 7 liters of capacity.", 7, 0);
@@ -139,7 +138,7 @@ World::World() {
 
 	//Lighter = trigger + container
 
-	Item* result_lighter = new Item("lighter", "It is usefull to start a flame.", "Maybe you can use it on a kitchen.", true, false);
+	Item* result_lighter = new Item("lighter", "It is usefull to start a flame.", "Maybe you can use it to 'turn on cookers'", true, false);
 
 	list<Item*> trigger_to;
 	trigger_to.push_back(result_lighter);
@@ -183,9 +182,6 @@ World::World() {
 	storage_room->AddExit(storage_to_kitchen, "west");
 
 	//END EXITS
-
-	//GAME (add rooms)
-	rooms.push_back(living_room);
 
 	//PLAYER
 	player = new Player("Player", "The person who is trapped inside the house.", living_room);
