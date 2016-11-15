@@ -24,10 +24,6 @@ bool Vault::OpenVault(const string& c) {
 	}
 	else {
 		Investigate();
-	}
-		
+		return true;
+	}	
 }
-
-
-
-

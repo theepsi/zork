@@ -8,7 +8,7 @@
 using namespace std;
 
 class Entity;
-class Creature;
+class Player;
 class Item;
 class Vat;
 
@@ -19,7 +19,7 @@ public:
 	bool Interaction(const string& input);
 
 	list<Room*> rooms;
-	Creature* player;
+	Player* player;
 
 	Item* wckey_instance;
 	Item* stkey_instance;
@@ -31,6 +31,8 @@ public:
 	map<string, Vat*> vat_game;
 	map<Item*, list<Item*>> combinables;
 	map<string, list<Item*>> combine_to;
+
+	bool hasWin = false;
 
 };
 

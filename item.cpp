@@ -9,7 +9,7 @@ Item::~Item() {
 
 }
 
-void Item::UseItem() {
+void Item::Use() {
 	if (action != "")
 		cout << action << "\n";
 	else
