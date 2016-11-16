@@ -418,26 +418,30 @@ void Player::PlayVatPuzzle(vector<string> tokens, bool &water_puzzle_complete, I
 		if (!water_puzzle_complete) {
 			Vat* source;
 			Vat* dest;
-			if (tokens[1] != tokens[2]) {
-				source = vat_game[tokens[1]];
-				dest = vat_game[tokens[2]];
+			if (vat_game.find(tokens[1]) != vat_game.end() && vat_game.find(tokens[2]) != vat_game.end()) {
+				if (tokens[1] != tokens[2]) {
+					source = vat_game[tokens[1]];
+					dest = vat_game[tokens[2]];
 
-				if (source->filled != 0) {
-					source->MoveWater(dest);
-					ShowVats(vat_game);
-					if (vat_game["a"]->filled == 8 && vat_game["b"]->filled == 8) {
-						cout << "You have completed the puzzle. A key appears on the wall.\n";
-						location->AddEntity(winkey_instance);
-						water_puzzle_complete = true;
+					if (source->filled != 0) {
+						source->MoveWater(dest);
+						ShowVats(vat_game);
+						if (vat_game["a"]->filled == 8 && vat_game["b"]->filled == 8) {
+							cout << "You have completed the puzzle. A key appears on the wall.\n";
+							location->AddEntity(winkey_instance);
+							water_puzzle_complete = true;
+						}
+					}
+					else {
+						cout << "Source vat is empty.\n";
 					}
 				}
 				else {
-					cout << "Source vat is empty.\n";
+					cout << "You can not move water from the same source to the same destination.\n";
 				}
-
 			}
 			else {
-				cout << "You can not move water from the same source to the same destination.\n";
+				cout << "You can not do that.\n";
 			}
 		}
 		else {
