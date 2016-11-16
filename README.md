@@ -28,8 +28,9 @@ With this rules you have the commands `show vats` to see the current state of th
 Finally if you complete the puzzle a key will fall to the room, the 'wkey', with this key you can go to the north of the living room and win the game.
 
 ## Authors
--[Ennio Casas Puglielli](https://github.com/theepsi)
- - email: theepsi@gmail.com
+* [Ennio Casas Puglielli](https://github.com/theepsi)
+	* email: theepsi@gmail.com
+
 ## License
 
 MIT
