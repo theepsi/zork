@@ -366,6 +366,7 @@ void Player::BoilItem(const string& item_name, bool cookers_working, Item* stkey
 			if (cookers_working) {
 				cout << "The ice is melted, a key has been revealed in the water.\n";
 				location->AddEntity(stkey_instance);
+				contains.remove(check);
 			}
 			else {
 				cout << "Cookers are not working.\n";
